@@ -63,29 +63,11 @@ class GadgetSaleController extends Controller
         }
         $gadget_inventory=Gadget_Inventory::where('gadget_id',$request->gadget_id)->first();
         if(!$gadget_inventory->gadget->status){
-            $datalog = [
-                'msg'   =>  'Gadget no disponible',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  null
-            ];
-            Log::alert('Gadget no disponible',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+          
             return response()->json(['errors'=>'Gadget no disponible'],422);
         }
         if($gadget_inventory->stock<$request->quantity){
-            $datalog = [
-                'msg'   =>  'No hay suficiente stock',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  null
-            ];
-            Log::alert('No hay suficiente stock',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+            
             return response()->json(['errors'=>'No hay suficiente stock'],409);
         }
         $total = $gadget_inventory->price * $request->quantity;
@@ -116,16 +98,7 @@ class GadgetSaleController extends Controller
     public function show($id){
         $gadget_sale = Gadget_Sale::with('gadget','user','paymentMethod')->find($id);
         if(!$gadget_sale){
-            $datalog = [
-                'msg'   =>  'Gadget sale no encontrado',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  null
-            ];
-            Log::alert('Gadget sale no encontrado',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+       
             return response()->json(['errors'=>'Gadget sale no encontrado'],404);
         }
         $datalog = [

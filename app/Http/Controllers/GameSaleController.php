@@ -66,26 +66,11 @@ class GameSaleController extends Controller
         $game_inventory=Game_Inventory::where('game_id',$request->game_id)->first();
         
         if (!$game_inventory->game->status) {
-            $datalog = [
-                'msg'   =>  'El juego no está disponible',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  => null
-            ];
-            Log::alert('El juego no está disponible',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+         
             return response()->json(['errors'=>'El juego no está disponible'], 409);
         }
         if($game_inventory->stock<$request->quantity){
-            $datalog = [
-                'msg'   =>  'No hay suficiente stock',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  => null
-            ];
+          
             return response()->json(['errors'=>'No hay suficiente stock'],409);
         }
 

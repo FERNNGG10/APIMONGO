@@ -48,17 +48,7 @@ class DlcController extends Controller
             'game_id' =>  'required|exists:games,id|numeric',
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
         $dlc = Dlc::create($request->all());
@@ -104,17 +94,7 @@ class DlcController extends Controller
             'game_id' =>  'required|exists:games,id|numeric',
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
         $dlc = Dlc::find($id);

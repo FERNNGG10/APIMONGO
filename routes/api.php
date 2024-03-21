@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 use Nette\Utils\Json;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Event ;
 
 /*
 |--------------------------------------------------------------------------
@@ -176,7 +177,20 @@ Route::middleware('auth:api')->prefix('gadgets/sales')->group(function(){
 
 Route::middleware(['auth:api','admin'])->get('logs',[LogController::class,'index']);
 
-
+/*Route::get('/stream',function(){
+set_time_limit(0);
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+header('Connection: keep-alive');
+Event::listen('App\Events\ConsoleEvent',function($event){
+    echo "data: {$event->console->name}\n\n";
+    ob_flush();
+    flush();
+});
+while(true){
+    sleep(5);
+}
+});*/
 
 
 

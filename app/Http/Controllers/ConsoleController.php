@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ConsoleEvent;
 use App\Models\Console;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +30,7 @@ class ConsoleController extends Controller
                 'supplier' => $console->supplier->name
             ];
         });
+        
         $queries = DB::getQueryLog();
         $datalog = [
             'msg'   =>  'Listado de consolas',
@@ -53,17 +55,7 @@ class ConsoleController extends Controller
             'price' =>  'required|numeric|between:1,999999.99'
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+         
             return response()->json(["errors"=>$validate->errors()],400);
         }
         $console = Console::create([
@@ -86,6 +78,8 @@ class ConsoleController extends Controller
         Log::info('Consola creada correctamente',$datalog);
         $this->mongo->Log = $datalog;
         $this->mongo->save();
+        //event(new ConsoleEvent($console->name));
+        $this->sendnotification('console',$console->name);
         return response()->json(["msg"=>"Consola creada correctamente","console"=>$console],201);
     
     }
@@ -123,17 +117,7 @@ class ConsoleController extends Controller
             'price' =>  'required|numeric|between:1,999999.99'
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(["errors"=>$validate->errors()],400);
         }
         $console = Console::find($id);
@@ -186,6 +170,13 @@ class ConsoleController extends Controller
         }
        
         return response()->json(["msg"=>"Consola no encontrada"],404);
+    }
+
+    private function sendnotification($event,$data){
+        $message = json_encode(['event' => $event, 'data' => $data]);
+        echo "event: $event\n";
+        echo "data: $message\n\n";
+        flush();
     }
     
 }

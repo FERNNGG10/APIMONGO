@@ -43,17 +43,7 @@ class SupplierController extends Controller
         ]);
 
         if($validate->fails()){
-            $logdata=[
-                'msg'   =>  'No pudo registrarse correctamente',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  $request->method(),
-                'ruta' =>   $request->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('No pudo registrarse correctamente',$logdata);
-            $this->mongo->Log = $logdata;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
 
@@ -91,17 +81,7 @@ class SupplierController extends Controller
         ]);
 
         if($validate->fails()){
-            $logdata=[
-                'msg'   =>  'No pudo actualizarse el proveedor',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  $request->method(),
-                'ruta' =>   $request->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('No pudo actualizarse el proveedor',$logdata);
-            $this->mongo->Log = $logdata;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
 

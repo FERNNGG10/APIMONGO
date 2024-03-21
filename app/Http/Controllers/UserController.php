@@ -52,17 +52,7 @@ class UserController extends Controller
         ]);
 
         if($validate->fails()){
-            $logdata=[
-                'msg'   =>  'No pudo regisrarse correctamente',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  $request->method(),
-                'ruta' =>   $request->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('No pudo regisrarse correctamente',$logdata);
-            $this->mongo->Log = $logdata;
-            $this->mongo->save();
+          
             return response()->json(['errors'=>$validate->errors()],422);
         }
         $code = Crypt::encrypt(rand(100000,999999));
@@ -133,17 +123,7 @@ class UserController extends Controller
         ]);
 
         if($validate->fails()){
-            $logdata=[
-                'msg'   =>  'No pudo actualizarse correctamente',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  $request->method(),
-                'ruta' =>   $request->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('No pudo actualizarse correctamente',$logdata);
-            $this->mongo->Log = $logdata;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
 

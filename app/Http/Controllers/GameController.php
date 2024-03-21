@@ -71,18 +71,7 @@ class GameController extends Controller
         ]);
 
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'No pudo crearse el juego correctamente',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  $request->method(),
-                'ruta' =>   $request->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-                
-            ];
-            Log::alert('No pudo crearse el juego correctamente',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(["errors"=>$validate->errors()],400);
         }
 
@@ -157,18 +146,7 @@ class GameController extends Controller
             ]);
     
             if($validate->fails()){
-                $datalog = [
-                    'msg'   =>  'No pudo actualizarse el juego correctamente',
-                    'user_id'  =>  auth()->user()->id,
-                    'verbo' =>  $request->method(),
-                    'ruta' =>   $request->url(),
-                    'data'  =>  $request->all(),
-                    'errors'    =>  $validate->errors()->toArray(),
-                    'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-                ];
-                Log::alert('No pudo actualizarse el juego correctamente',$datalog);
-                $this->mongo->Log = $datalog;
-                $this->mongo->save();
+              
                 return response()->json(["errors"=>$validate->errors()],400);
             }
     

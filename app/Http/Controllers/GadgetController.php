@@ -53,17 +53,7 @@ class GadgetController extends Controller
             'price' =>  'required|numeric|between:1,999999.99'
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],422);
         }
         $gadget = Gadget::create([
@@ -119,17 +109,7 @@ class GadgetController extends Controller
             'price' =>  'required|numeric|between:1,999999.99'
         ]);
         if($validate->fails()){
-            $datalog = [
-                'msg'   =>  'Error en validacion de datos',
-                'user_id'  =>  auth()->user()->id,
-                'verbo' =>  request()->method(),
-                'ruta' =>   request()->url(),
-                'data'  =>  $validate->errors()->toArray(),
-                'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
-            ];
-            Log::alert('Error en validacion de datos',$datalog);
-            $this->mongo->Log = $datalog;
-            $this->mongo->save();
+           
             return response()->json(['errors'=>$validate->errors()],400);
         }
         $gadget = Gadget::find($id);
