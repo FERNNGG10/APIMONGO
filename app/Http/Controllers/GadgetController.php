@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GadgetEvent;
 use App\Models\Gadget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,13 +33,14 @@ class GadgetController extends Controller
         $queries = DB::getQueryLog();
         $datalog = [
             'msg'   =>  'Listado de gadgets',
-            'user_id'  =>  auth()->user()->id,
+            'user_id'  =>  1,
             'verbo' =>  request()->method(),
             'ruta' =>   request()->url(),
             'data'  =>  $queries,
             'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
         ];
         Log::info('Listado de gadgets',$datalog);
+        //event(new GadgetEvent("HOLA BRO"));
         $this->mongo->Log = $datalog;
         $this->mongo->save();
         return response()->json(["gadgets"=>$gadgets]);

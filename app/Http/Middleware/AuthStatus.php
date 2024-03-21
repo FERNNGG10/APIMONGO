@@ -16,6 +16,10 @@ class AuthStatus
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if(auth()->user()->status)
+        {
+            return $next($request);
+        }
+        return response()->json("Account doesn't been activated",403);
     }
 }

@@ -226,4 +226,12 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() *60*24
         ]);
     }
+
+    public function status(){
+         if(auth()->user()->status){
+            return response()->json(auth()->user()->status);
+         }
+         return response()->json("Account doesn't been activated",403);
+       
+    }
 }
