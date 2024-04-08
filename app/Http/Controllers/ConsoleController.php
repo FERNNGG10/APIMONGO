@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ConsoleEvent;
+use App\Events\testWebsocket;
 use App\Models\Console;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +44,7 @@ class ConsoleController extends Controller
         Log::info('Listado de consolas',$datalog);
         $this->mongo->Log = $datalog;
         $this->mongo->save();
+        event(new testWebsocket($consoles));
         return response()->json(["consoles"=>$consoles]);
     }
     
@@ -78,8 +80,6 @@ class ConsoleController extends Controller
         Log::info('Consola creada correctamente',$datalog);
         $this->mongo->Log = $datalog;
         $this->mongo->save();
-        //event(new ConsoleEvent($console->name));
-        $this->sendnotification('console',$console->name);
         return response()->json(["msg"=>"Consola creada correctamente","console"=>$console],201);
     
     }

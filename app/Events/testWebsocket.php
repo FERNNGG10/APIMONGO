@@ -13,15 +13,15 @@ use Illuminate\Queue\SerializesModels;
 class testWebsocket implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $message;
+    public $consoles;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($consoles)
     {
-        $this->message = $message;
+        $this->consoles = $consoles;
     }
     
 
@@ -32,6 +32,13 @@ class testWebsocket implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('testing');
+       return [
+            new Channel('consolassocket')
+       ];
+    }
+
+    public function broadcastAs()
+    {
+    return 'Consoles';
     }
 }
