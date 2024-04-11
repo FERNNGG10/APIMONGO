@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SSE;
 use App\Models\Category;
 use App\Models\Log as ModelsLog;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CategoryController extends Controller
 {
@@ -16,6 +20,33 @@ class CategoryController extends Controller
     {
         $this->mongo = new ModelsLog;
     }
+
+    
+    public function SSE(Request $request)
+    {    
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no');
+        header('Access-Control-Allow-Origin:*');
+
+
+        if(Cache::has('SSEE')) {
+           
+            echo "data: " . json_encode(true) . "\n\n";
+            ob_flush();
+            flush();
+            
+
+        }else{
+            echo "" . "\n\n";
+            ob_flush();
+            flush();
+        }
+
+        sleep(1);
+    }
+    
 
     public function index(){
         DB::enableQueryLog();
@@ -60,6 +91,11 @@ class CategoryController extends Controller
         Log::info('Categoria creada correctamente',$logdata);
         $this->mongo->Log = $logdata;
         $this->mongo->save();
+       
+        
+        Cache::put('SSEE', true, 5);
+        
+        
         return response()->json(["msg"=>"Categoria creada correctamente","category"=>$category],201);
     }
 
@@ -93,6 +129,7 @@ class CategoryController extends Controller
         Log::info('Categoria actualizada correctamente',$logdata);
         $this->mongo->Log = $logdata;
         $this->mongo->save();
+        
         return response()->json(["msg"=>"Categoria actualizada correctamente","category"=>$category],200);
     }
 

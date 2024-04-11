@@ -54,7 +54,7 @@ class ClassificationController extends Controller
             'user_id'  =>  auth()->user()->id,
             'verbo' =>  $request->method(),
             'ruta' =>   $request->url(),
-            'data'  =>  $classification,
+            'data'  =>  $classification->toArray(),
             'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
         ];
         Log::info('Clasificacion creada correctamente',$logdata);

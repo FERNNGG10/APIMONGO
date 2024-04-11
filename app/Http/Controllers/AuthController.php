@@ -93,7 +93,36 @@ class AuthController extends Controller
         Log::info('Usuario activo su cuenta',$logdata);
         $this->mongo->Log = $logdata;
         $this->mongo->save();
-        return response()->json("Tu cuenta a sido activada",200);
+        return '<!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cuenta Activada</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f0f0f0;
+                    text-align: center;
+                    padding: 50px;
+                }
+                .message {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 5px;
+                    margin: 0 auto;
+                    width: 50%;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="message">
+                <h1>Su cuenta ha sido activada</h1>
+            </div>
+        </body>
+        </html>';
     }
     /**
      * Get a JWT via given credentials.
@@ -195,8 +224,20 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
+        $userData=['name'=>auth()->user()->name,'email'=>auth()->user()->email];
+        $logdata = [
+            'msg'   =>  'Cerro sesion',
+            'user_id'  =>  auth()->user()->id,
+            'verbo' =>  $request->method(),
+            'ruta' =>   $request->url(),
+            'data'  => $userData,
+            'timestamp' => date('Y-m-d H:i:s'),  // Agrega la fecha y la hora actual
+        ];
+        Log::info('Cerro sesion',$logdata);
+        $this->mongo->Log = $logdata;
+        $this->mongo->save();
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }

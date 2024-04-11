@@ -28,6 +28,7 @@ use Nette\Utils\Json;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Event ;
 
 /*
@@ -70,6 +71,9 @@ Route::middleware(['auth:api','authstatus'])->prefix('users')->group(function(){
     Route::middleware('admin')->delete('destroy/{user}',[UserController::class,'destroy'])->where('user', '[0-9]+');
     Route::middleware('admin')->get('roles',[UserController::class,'roles']);
 });
+
+Route::get('sse',[CategoryController::class,'SSE']);
+
 Route::middleware(['auth:api','authstatus'])->prefix('categories')->group(function(){
     Route::get('index',[CategoryController::class,'index']);
     Route::middleware('admin.user')->post('store',[CategoryController::class,'store']);
